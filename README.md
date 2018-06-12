@@ -6,7 +6,7 @@ R scripts to support workload modelling
 [goodpapers.R](goodpapers.R) - Calculates number of good recent papers published by each staff member, from _Symplectic Elements_ data.
 
 ## Updating the data
-Data for these scripts largely has be pulled manually from various other databases. Here's how:
+Data for these scripts largely has to be pulled manually from various other databases. Here's how:
 
 ### Publication data
 You need a _research admin_ account on Symplectic Elements to do this. If you don't have such an account, you can still use the last version of the data someone uploaded - just skip to the next section.
