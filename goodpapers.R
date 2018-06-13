@@ -11,7 +11,7 @@
 ## but they can't return more than 5, however many they write.
 
 from.year <- 2014 ## The earliest year of publication that counts
-quart.point <- 4  ## The quartile on SNIP that counts as 'good' 2 = LQ, 3 = median, 4 = UQ.
+quart.point <- 3  ## The quartile on SNIP that counts as 'good' 2 = LQ, 3 = median, 4 = UQ.
 n.cap <- 5 ## Maximum number of papers (ie. if >ncap then =ncap)
 
 ## Load packages
@@ -60,8 +60,8 @@ gpubs <- gpubs %>% filter(SNIP > qlevel)
 ## Summarise by username
 gpubsum <- gpubs %>% group_by(Username) %>% summarise(N = n())
 
-## Cap
-gpubsum$N[gpubsum$N > n.cap] <- n.cap
+##Cap
+gpubsum <- gpubsum %>% mutate(Ncapped = pmin(n.cap, N))
 
 
 
