@@ -6,10 +6,6 @@
 ## capped to a given maximum
 
 ## Specify parameters
-## I've picked ones here that make sense from a REF perspective 
-## i.e. we should give time to the people who are writing our best REF papers
-## but they can't return more than 5, however many they write.
-
 from.year <- 2015 ## The earliest year of publication that counts
 quart.point <- 2  ## The quartile on SNIP that counts as 'good' 2 = LQ, 3 = median, 4 = UQ.
 n.cap <- 6 ## Maximum number of papers (ie. if >ncap then =ncap)
@@ -19,8 +15,15 @@ library(tidyverse)
 
 ## Load data
 pubs <- read_csv("data/symplectic-report.csv") 
+staff <- read_csv("data/psych_staff.csv")
 
 ## Preprocess data
+
+## Cut staff down to those included in workload model
+staff <- staff %>% filter(WLM==1)
+
+## Select only needed columns of staff details
+staff <- staff %>% select(Username, syname, surname, first_name)
 
 ### Select and rename columns we need
 
@@ -39,10 +42,12 @@ colnames(gpubs) <-  c('ID', 'Username', 'authors', 'year', 'title','journal',
 
 gpubs$year <- as.numeric(substr(gpubs$year,1,4))  
 
-### Filter to published journal articles
-gpubs <- gpubs %>% 
-  filter(status %in% c('Published', 'Published online', 'Accepted')) %>% 
-  filter(pubtype == "Journal article")
+## Uncomment line to filter to at least accepted
+## NOTE: Synplectic data file often does not record status!
+## gpubs <- gpubs %>% filter(status %in% c('Published', 'Published online', 'Accepted')) 
+
+### Filter to journal articles
+gpubs <- gpubs %>% filter(pubtype == "Journal article")
 
 ### Remove status and pubtype, as now superfluous
 gpubs <- gpubs %>% select(-status, -pubtype)
@@ -63,5 +68,13 @@ gpubsum <- gpubs %>% group_by(Username) %>% summarise(N = n())
 ##Cap
 gpubsum <- gpubsum %>% mutate(Ncapped = pmin(n.cap, N))
 
+## Include a zero for people with no good papers
+gpubsum <- merge(gpubsum, staff, all.y = TRUE)
+gpubsum$Ncapped[is.na(gpubsum$Ncapped)] <- 0
 
+## Arrange by surname
+gpubsum <- gpubsum %>% arrange(surname)
+
+## Write out to CSV file
+write_csv(gpubsum,"goodpapers.csv")
 
