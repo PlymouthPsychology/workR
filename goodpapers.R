@@ -10,9 +10,9 @@
 ## i.e. we should give time to the people who are writing our best REF papers
 ## but they can't return more than 5, however many they write.
 
-from.year <- 2014 ## The earliest year of publication that counts
-quart.point <- 3  ## The quartile on SNIP that counts as 'good' 2 = LQ, 3 = median, 4 = UQ.
-n.cap <- 5 ## Maximum number of papers (ie. if >ncap then =ncap)
+from.year <- 2015 ## The earliest year of publication that counts
+quart.point <- 2  ## The quartile on SNIP that counts as 'good' 2 = LQ, 3 = median, 4 = UQ.
+n.cap <- 6 ## Maximum number of papers (ie. if >ncap then =ncap)
 
 ## Load packages
 library(tidyverse)
@@ -41,7 +41,7 @@ gpubs$year <- as.numeric(substr(gpubs$year,1,4))
 
 ### Filter to published journal articles
 gpubs <- gpubs %>% 
-  filter(status %in% c('Published', 'Published online')) %>% 
+  filter(status %in% c('Published', 'Published online', 'Accepted')) %>% 
   filter(pubtype == "Journal article")
 
 ### Remove status and pubtype, as now superfluous
