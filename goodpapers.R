@@ -78,3 +78,10 @@ gpubsum <- gpubsum %>% arrange(surname)
 ## Write out to CSV file
 write_csv(gpubsum,"goodpapers.csv")
 
+## draw a chart
+gpubsum %>% ggplot(aes(x=reorder(surname, -N), y=N))+
+  geom_point()+
+  labs(x="", y="Good papers")+
+  scale_y_continuous(breaks=seq(0, 30, 2)) + # Ticks from 0-30, every 2
+  theme(axis.text.x = element_text(angle = 90, vjust=0.5, size=8)) # rotate names, move left a bit to line up with tick
+  
